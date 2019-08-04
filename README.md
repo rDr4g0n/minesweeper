@@ -27,6 +27,9 @@ The rules are pretty simple (try to play with the [demo](https://sweeper.now.sh/
 * lose scenario
 * board size
 * difficulty
+* game timer
+* some sorta scoring mechanism?
+* flood fill reveal?
 
 ## TODO
 
