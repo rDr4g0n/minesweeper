@@ -33,7 +33,6 @@ The rules are pretty simple (try to play with the [demo](https://sweeper.now.sh/
 
 ## TODO
 
-* make game logic work
 * create Game component to encapsulate logic
-* setup prettier to ensure correct style
+* setup prettier to ensure correct code style
 

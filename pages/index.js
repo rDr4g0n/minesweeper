@@ -33,7 +33,7 @@ class Minesweeper {
 
         this.mines = []
         // TODO - adjustable difficulty
-        let mineCount = Math.ceil(squareCount * 0.05)
+        let mineCount = Math.ceil(squareCount * 0.1)
         while(mineCount){
             let sq = randoItem(this.board)
             if(!sq.mine){
@@ -77,10 +77,49 @@ class Minesweeper {
         if(!square.revealed){
             // always unflag before reveal
             square.flagged = false;
-            square.revealed = true;
-        }
 
-        // TODO - if this square has a 0 value, flood fill
+            // if count is zero, flood fill other 0's
+            if(!square.mine && square.count === 0){
+                const flood = i => {
+                    const sq = this.board[i]
+                    if(sq.count || sq.revealed){
+                        return
+                    }
+                    const x1 = sq.index % this.size
+                    const y1 = Math.floor(sq.index / this.size)
+                    sq.revealed = true
+                    square.flagged = false
+
+                    // examine neighbors
+                    const neighbors = []
+                    // west
+                    if(x1 - 1 >= 0) neighbors.push((y1 * this.size) + (x1 - 1))
+                    // east
+                    if(x1 + 1 < this.size) neighbors.push((y1 * this.size) + (x1 + 1))
+                    // north
+                    if(y1 - 1 >= 0) neighbors.push(((y1 - 1) * this.size) + x1)
+                    // south
+                    if(y1 + 1 < this.size) neighbors.push(((y1 + 1) * this.size) + x1)
+
+                    neighbors.forEach(j => {
+                        const neighbor = this.board[j]
+                        // if neighbor has a zero count, continue flood
+                        if(!neighbor.count && !neighbor.mine){
+                            flood(j)
+                        }
+                        // if neighbor is not a mine, reveal it
+                        if(!neighbor.mine){
+                            neighbor.revealed = true
+                            neighbor.flagged = true
+                        }
+                    })
+
+                }
+                flood(i)
+            } else {
+                square.revealed = true;
+            }
+        }
 
         return this.evaluateGame();
     }
@@ -101,6 +140,7 @@ class Minesweeper {
         // if a mine is revealed the game is lost
         if(this.mines.some(m => m.revealed)){
             console.log("lost")
+            // TODO - focus the recently revealed mine?
             this.endGame(LOST);
         }
         // if all mines are flagged, and no blank spaces are flagged
@@ -115,6 +155,7 @@ class Minesweeper {
     endGame(status){
         this.end = new Date().getTime()
         this.status = status
+        this.board.forEach(sq => sq.revealed = true)
     }
 }
 
@@ -122,16 +163,21 @@ class Minesweeper {
 let minesweeper
 
 const Index = () => {
-    const [boardSize, setBoardSize] = useState(7);
+    const [boardSize, setBoardSize] = useState(10);
     const [board, setBoard] = useState([]);
     const [gameStatus, setGameStatus] = useState(null);
 
     // TODO - is this the correct way to do setup/teardown?
     useEffect(() => {
+        newGame()
+    }, [])
+
+    const newGame = () => {
         minesweeper = new Minesweeper(boardSize)
         // setup initial game state
         setBoard(minesweeper.board)
-    }, [])
+        setGameStatus(minesweeper.status)
+    }
 
     const handleClick = (e, i) => {
         if(e.button === 2){
@@ -144,9 +190,16 @@ const Index = () => {
         setGameStatus(minesweeper.status)
     }
 
+    const handleNewGame = () => {
+        newGame()
+    }
+
     return (
-      <Layout title={`Minesweeper (active)`}>
-        <div>{gameStatus}</div>
+      <Layout title={`Minesweeper`}>
+        <div>
+            <button onClick={handleNewGame}>New Game</button>&nbsp;
+            {gameStatus || "grape job so far"}
+        </div>
         <Desk boardSize={boardSize}>
           {board.map(sq => (
             <Square
