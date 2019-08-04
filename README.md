@@ -22,17 +22,16 @@ The rules are pretty simple (try to play with the [demo](https://sweeper.now.sh/
 
 ## Potential Features
 
-* new game
 * win scenario
 * lose scenario
-* board size
-* difficulty
+* board size control
+* difficulty control
 * game timer
 * some sorta scoring mechanism?
-* flood fill reveal?
 
 ## TODO
 
 * create Game component to encapsulate logic
+* use react more
 * setup prettier to ensure correct code style
 

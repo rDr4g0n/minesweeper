@@ -74,21 +74,17 @@ class Minesweeper {
         if(this.status) return
 
         const square = this.board[i]
-        if(!square.revealed){
-            // always unflag before reveal
-            square.flagged = false;
-
+        if(!square.revealed && !square.flagged){
             // if count is zero, flood fill other 0's
             if(!square.mine && square.count === 0){
                 const flood = i => {
                     const sq = this.board[i]
-                    if(sq.count || sq.revealed){
+                    if(sq.count || sq.revealed || sq.flagged){
                         return
                     }
                     const x1 = sq.index % this.size
                     const y1 = Math.floor(sq.index / this.size)
                     sq.revealed = true
-                    square.flagged = false
 
                     // examine neighbors
                     const neighbors = []
@@ -108,9 +104,8 @@ class Minesweeper {
                             flood(j)
                         }
                         // if neighbor is not a mine, reveal it
-                        if(!neighbor.mine){
+                        if(!neighbor.mine && !neighbor.flagged){
                             neighbor.revealed = true
-                            neighbor.flagged = true
                         }
                     })
 
