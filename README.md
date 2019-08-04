@@ -32,4 +32,5 @@ The rules are pretty simple (try to play with the [demo](https://sweeper.now.sh/
 
 * make game logic work
 * create Game component to encapsulate logic
+* setup prettier to ensure correct style
 
