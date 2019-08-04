@@ -7,22 +7,31 @@ import Square from '../components/square';
 import Mine from '../components/mine';
 import Flag from '../components/flag';
 
+const WON = "won"
+const LOST = "lost"
+
 const randoItem = arr => arr[Math.floor(Math.random() * arr.length)]
 
 class Minesweeper {
     constructor(size) {
+        // if the game has been won or lost
+        this.status = null
+
+        // TODO - score
+
         this.size = size
         const squareCount = size * size
 
         // setup board
         this.board = [...Array(squareCount).keys()].map(i => ({
             index: i,
-            revealed: true,
+            revealed: false,
             mine: false,
             flagged: false,
             count: 0,
         }))
 
+        this.mines = []
         // TODO - adjustable difficulty
         let mineCount = Math.ceil(squareCount * 0.05)
         while(mineCount){
@@ -30,8 +39,9 @@ class Minesweeper {
             if(!sq.mine){
                 // make this a mine
                 sq.mine = true
+                // add this mine to the list of mines
+                this.mines.push(sq)
 
-                const neighbors = []
                 const x1 = sq.index % this.size
                 const y1 = Math.floor(sq.index / this.size)
 
@@ -39,52 +49,72 @@ class Minesweeper {
                 // mine-adjacent
                 for(let offsetX = -1; offsetX <= 1; offsetX++){
                     const xx = x1 - offsetX
+                    // ensure potential column is within the grid. ie it is
+                    // not column -1 or something
                     if(xx >= 0 && xx <= this.size - 1) {
                         for(let offsetY = -1; offsetY <= 1; offsetY++){
                             const yy = y1 - offsetY
+                            // ensure potential row is within the grid. ie it is
+                            // not a row that is past the end of the grid
                             if(yy >= 0 && yy <= this.size - 1) {
                                 const index = xx + (yy * this.size)
-                                if(!this.board[index]) debugger
                                 this.board[index].count += 1
                             }
                         }
                     }
                 }
-
-
-
                 mineCount -= 1
             }
         }
         
         this.start = new Date().getTime()
-        this.failed = false
     }
 
     revealSquare(i){
+        if(this.status) return
+
         const square = this.board[i]
         if(!square.revealed){
             // always unflag before reveal
             square.flagged = false;
             square.revealed = true;
-            if(square.mine){
-                // TODO - kick off failure score, cleanup, etc
-                return false
-            }
         }
-        return true
+
+        // TODO - if this square has a 0 value, flood fill
+
+        return this.evaluateGame();
     }
 
     flagSquare(i){
+        if(this.status) return
+
         const square = this.board[i]
         if(!square.revealed){
             this.board[i].flagged = !this.board[i].flagged
         }
+        return this.evaluateGame();
     }
 
-    endGame(){
+    // check if game is won or lost, and return
+    // the status
+    evaluateGame(){
+        // if a mine is revealed the game is lost
+        if(this.mines.some(m => m.revealed)){
+            console.log("lost")
+            this.endGame(LOST);
+        }
+        // if all mines are flagged, and no blank spaces are flagged
+        // game is won!
+        if(this.board.every(m => m.mine ? m.flagged : !m.flagged)){
+            console.log("woned")
+            this.endGame(WON)
+        }
+        return this.status
+    }
+
+    endGame(status){
         this.end = new Date().getTime()
-        this.failed = true
+        this.status = status
     }
 }
 
@@ -94,6 +124,7 @@ let minesweeper
 const Index = () => {
     const [boardSize, setBoardSize] = useState(7);
     const [board, setBoard] = useState([]);
+    const [gameStatus, setGameStatus] = useState(null);
 
     // TODO - is this the correct way to do setup/teardown?
     useEffect(() => {
@@ -103,34 +134,31 @@ const Index = () => {
     }, [])
 
     const handleClick = (e, i) => {
-        let isSafe = true
         if(e.button === 2){
             e.preventDefault()
             minesweeper.flagSquare(i)
         } else {
-            isSafe = minesweeper.revealSquare(i)
+            minesweeper.revealSquare(i)
         }
         setBoard([...minesweeper.board])
-        if(!isSafe) {
-            console.log("ASPLODE")
-            // TODO - failure state
-        }
+        setGameStatus(minesweeper.status)
     }
 
     return (
       <Layout title={`Minesweeper (active)`}>
+        <div>{gameStatus}</div>
         <Desk boardSize={boardSize}>
           {board.map(sq => (
             <Square
               key={sq.index}
-              // disabled={i === 55 || i === 10}
+              disabled={sq.revealed}
               onClick={e => handleClick(e, sq.index)}
               onContextMenu={e => handleClick(e, sq.index)}
             >
               { /* TODO - theres certainly a more succinct way */ }
               {!sq.revealed && sq.flagged && <Flag />}
               {sq.revealed && sq.mine && <Mine />}
-              {sq.revealed && !sq.mine && sq.count}
+              {sq.revealed && !sq.mine && !!sq.count && sq.count}
             </Square>
           ))}
         </Desk>
