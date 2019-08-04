@@ -17,8 +17,6 @@ class Minesweeper {
         // if the game has been won or lost
         this.status = null
 
-        // TODO - score
-
         this.size = size
         const squareCount = size * size
 
@@ -132,16 +130,12 @@ class Minesweeper {
     // check if game is won or lost, and return
     // the status
     evaluateGame(){
-        // if a mine is revealed the game is lost
         if(this.mines.some(m => m.revealed)){
-            console.log("lost")
+            // if any mines are revealed the game is lost
             // TODO - focus the recently revealed mine?
             this.endGame(LOST);
-        }
-        // if all squares are revealed, and all mines are flagged
-        // or still hidden, win!
-        if(this.board.every(m => m.revealed || (m.mine && !m.revealed))){
-            console.log("woned")
+        } else if(this.board.every(m => m.mine || m.revealed)){
+            // if all non-mine squares are revealed, win!
             this.endGame(WON)
         }
         return this.status
@@ -161,6 +155,8 @@ const Index = () => {
     const [boardSize, setBoardSize] = useState(10);
     const [board, setBoard] = useState([]);
     const [gameStatus, setGameStatus] = useState(null);
+    const [cheater, setCheater] = useState(false);
+    const [minesCount, setMinesCount] = useState(0);
 
     // TODO - is this the correct way to do setup/teardown?
     useEffect(() => {
@@ -171,6 +167,7 @@ const Index = () => {
         minesweeper = new Minesweeper(boardSize)
         // setup initial game state
         setBoard(minesweeper.board)
+        setMinesCount(minesweeper.mines.length)
         setGameStatus(minesweeper.status)
     }
 
@@ -182,6 +179,7 @@ const Index = () => {
             minesweeper.revealSquare(i)
         }
         setBoard([...minesweeper.board])
+        setMinesCount(minesweeper.mines.length)
         setGameStatus(minesweeper.status)
     }
 
@@ -189,11 +187,19 @@ const Index = () => {
         newGame()
     }
 
+    const handleToggleCheater = () => {
+        setCheater(!cheater)
+    }
+
     return (
       <Layout title={`Minesweeper`}>
         <div>
             <button onClick={handleNewGame}>New Game</button>&nbsp;
+            <button onClick={handleToggleCheater}>
+                {cheater ? "I swear ive changed" : "I am a cheater"}
+            </button>&nbsp;
             {gameStatus || "grape job so far"}
+            <div>{minesCount}</div>
         </div>
         <Desk boardSize={boardSize}>
           {board.map(sq => (
@@ -205,8 +211,8 @@ const Index = () => {
             >
               { /* TODO - theres certainly a more succinct way */ }
               {!sq.revealed && sq.flagged && <Flag />}
-              {sq.mine && <Mine />}
-              {!sq.mine && !!sq.count && sq.count}
+              {(cheater || sq.revealed) && sq.mine && <Mine />}
+              {(cheater || sq.revealed) && !sq.mine && !!sq.count && sq.count}
             </Square>
           ))}
         </Desk>

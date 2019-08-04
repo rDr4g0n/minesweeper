@@ -22,12 +22,10 @@ The rules are pretty simple (try to play with the [demo](https://sweeper.now.sh/
 
 ## Potential Features
 
-* win scenario
-* lose scenario
+* win scenario design
+* lose scenario design
 * board size control
-* difficulty control
 * game timer
-* some sorta scoring mechanism?
 
 ## TODO
 
