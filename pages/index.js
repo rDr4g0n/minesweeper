@@ -138,9 +138,9 @@ class Minesweeper {
             // TODO - focus the recently revealed mine?
             this.endGame(LOST);
         }
-        // if all mines are flagged, and no blank spaces are flagged
-        // game is won!
-        if(this.board.every(m => m.mine ? m.flagged : !m.flagged)){
+        // if all squares are revealed, and all mines are flagged
+        // or still hidden, win!
+        if(this.board.every(m => m.revealed || (m.mine && !m.revealed))){
             console.log("woned")
             this.endGame(WON)
         }
@@ -205,8 +205,8 @@ const Index = () => {
             >
               { /* TODO - theres certainly a more succinct way */ }
               {!sq.revealed && sq.flagged && <Flag />}
-              {sq.revealed && sq.mine && <Mine />}
-              {sq.revealed && !sq.mine && !!sq.count && sq.count}
+              {sq.mine && <Mine />}
+              {!sq.mine && !!sq.count && sq.count}
             </Square>
           ))}
         </Desk>
