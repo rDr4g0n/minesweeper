@@ -20,16 +20,15 @@ The rules are pretty simple (try to play with the [demo](https://sweeper.now.sh/
 * The goal is to reveal or flag all squares without revealing a mine.
 
 
-## Potential Features
-
-* win scenario design
-* lose scenario design
-* board size control
-* game timer
-
 ## TODO
 
 * create Game component to encapsulate logic
-* use react more
-* setup prettier to ensure correct code style
+* do more things the react way
+* ensure all files match the code style
+* design/layout
+    * new game control
+    * board size control
+    * game timer, mine count
+    * win scenario
+    * lose scenario
 
