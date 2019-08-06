@@ -34,33 +34,10 @@ export default class Minesweeper {
         sq.mine = true;
         // add this mine to the list of mines
         this.mines.push(sq);
-
-        const x1 = sq.index % this.size;
-        const y1 = Math.floor(sq.index / this.size);
-
-        // visit neighbors and notify they are
-        // mine-adjacent
-        for (let offsetX = -1; offsetX <= 1; offsetX++) {
-          const xx = x1 - offsetX;
-          // ensure potential column is within the grid. ie it is
-          // not column -1 or something
-          if (xx >= 0 && xx <= this.size - 1) {
-            for (let offsetY = -1; offsetY <= 1; offsetY++) {
-              const yy = y1 - offsetY;
-              // ensure potential row is within the grid. ie it is
-              // not a row that is past the end of the grid
-              if (yy >= 0 && yy <= this.size - 1) {
-                const index = xx + yy * this.size;
-                this.board[index].count += 1;
-              }
-            }
-          }
-        }
+        this.getNeighbors(sq.index).forEach(neighbor => neighbor.count += 1)
         mineCount -= 1;
       }
     }
-
-    this.start = new Date().getTime();
   }
 
   revealSquare(i) {
@@ -75,20 +52,20 @@ export default class Minesweeper {
           if (sq.count || sq.revealed || sq.flagged) {
             return;
           }
-          const x1 = sq.index % this.size;
-          const y1 = Math.floor(sq.index / this.size);
+
+          const { x, y } = this.indexToCoords(sq.index)
           sq.revealed = true;
 
           // examine neighbors
           const neighbors = [];
           // west
-          if (x1 - 1 >= 0) neighbors.push(y1 * this.size + (x1 - 1));
+          if (x - 1 >= 0) neighbors.push(y * this.size + (x - 1));
           // east
-          if (x1 + 1 < this.size) neighbors.push(y1 * this.size + (x1 + 1));
+          if (x + 1 < this.size) neighbors.push(y * this.size + (x + 1));
           // north
-          if (y1 - 1 >= 0) neighbors.push((y1 - 1) * this.size + x1);
+          if (y - 1 >= 0) neighbors.push((y - 1) * this.size + x);
           // south
-          if (y1 + 1 < this.size) neighbors.push((y1 + 1) * this.size + x1);
+          if (y + 1 < this.size) neighbors.push((y + 1) * this.size + x);
 
           neighbors.forEach(j => {
             const neighbor = this.board[j];
@@ -109,6 +86,35 @@ export default class Minesweeper {
     }
 
     return this.evaluateGame();
+  }
+
+  getNeighbors(i, cardinalOnly = false) {
+    const { x, y } = this.indexToCoords(i)
+    const neighbors = [];
+    for (let offsetX = -1; offsetX <= 1; offsetX++) {
+      const xx = x - offsetX;
+      // ensure potential column is within the grid. ie it is
+      // not column -1 or something
+      if (xx >= 0 && xx <= this.size - 1) {
+        for (let offsetY = -1; offsetY <= 1; offsetY++) {
+          const yy = y - offsetY;
+          // ensure potential row is within the grid. ie it is
+          // not a row that is past the end of the grid
+          if (yy >= 0 && yy <= this.size - 1) {
+            const index = xx + yy * this.size;
+            neighbors.push(this.board[index])
+          }
+        }
+      }
+    }
+    return neighbors
+  }
+
+  indexToCoords(i){
+    return {
+        x: i % this.size,
+        y: Math.floor(i / this.size)
+    }
   }
 
   flagSquare(i) {
@@ -136,7 +142,6 @@ export default class Minesweeper {
   }
 
   endGame(status) {
-    this.end = new Date().getTime();
     this.status = status;
     this.board.forEach(sq => (sq.revealed = true));
   }

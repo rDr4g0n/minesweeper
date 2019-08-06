@@ -22,7 +22,6 @@ The rules are pretty simple (try to play with the [demo](https://sweeper.now.sh/
 
 ## TODO
 
-* create Game component to encapsulate logic
 * do more things the react way
 * design/layout
     * new game control
@@ -35,4 +34,6 @@ The rules are pretty simple (try to play with the [demo](https://sweeper.now.sh/
     * creepers for mines?
     * board is made of dirt blocks/grass
     * underneath is stone blocks
+* focus the mine which asplode the game
+* transitions when square state changes
 

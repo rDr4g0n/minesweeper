@@ -11,17 +11,24 @@ const Index = () => {
   // NOTE - this seems to be a suitable way to dispose the old game
   // and create a fresh one
   const handleNewGameClick = () => {
+    setMessage('Another go, eh?');
     setGameId(gameId + 1);
   };
-
   const handleWin = () => {
     setMessage("You've done it.");
   };
   const handleLoss = () => {
-    setMessage("You've failed.");
+    setMessage(
+      `You've failed.${
+        isCheater ? " Despite cheating, you've still failed." : ''
+      }`
+    );
   };
 
   const handleToggleCheater = () => {
+    if (!isCheater) {
+      setMessage('CHEATER!');
+    }
     setIsCheater(!isCheater);
   };
 
