@@ -22,14 +22,16 @@ const Index = () => {
   };
 
   const handleToggleCheater = () => {
-    setIsCheater(!isCheater)
-  }
+    setIsCheater(!isCheater);
+  };
 
   return (
     <Layout title={`Minesweeper`}>
       <div>
         <button onClick={handleNewGameClick}>New Game</button>
-        <button onClick={handleToggleCheater}>{isCheater ? "I dont wanna cheat no more" : "Lemme peek at the board"}</button>
+        <button onClick={handleToggleCheater}>
+          {isCheater ? 'I dont wanna cheat no more' : 'Lemme peek at the board'}
+        </button>
         <div>{message}</div>
       </div>
       <Game

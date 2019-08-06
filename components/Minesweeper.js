@@ -5,10 +5,7 @@ const LOSS = 'loss';
 
 const randoItem = arr => arr[Math.floor(Math.random() * arr.length)];
 
-export {
-    WIN,
-    LOSS
-}
+export { WIN, LOSS };
 
 export default class Minesweeper {
   constructor(size) {
@@ -144,4 +141,3 @@ export default class Minesweeper {
     this.board.forEach(sq => (sq.revealed = true));
   }
 }
-

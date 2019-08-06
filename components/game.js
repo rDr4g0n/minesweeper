@@ -6,16 +6,9 @@ import Square from './square';
 import Mine from './mine';
 import Flag from './flag';
 
-// TODO - find the right way to deal with this "singleton" approach
-let minesweeper;
-
-export default function Game({ boardSize, cheat=false, onWin, onLoss }) {
-  const [board, setBoard] = useState([]);
-
-  useEffect(() => {
-    minesweeper = new Minesweeper(boardSize);
-    setBoard(minesweeper.board);
-  }, []);
+export default function Game({ boardSize, cheat = false, onWin, onLoss }) {
+  const [minesweeper, setMinesweeper] = useState(new Minesweeper(boardSize));
+  const [board, setBoard] = useState(minesweeper.board);
 
   const examineStatus = () => {
     switch (minesweeper.status) {
@@ -38,7 +31,7 @@ export default function Game({ boardSize, cheat=false, onWin, onLoss }) {
       minesweeper.revealSquare(i);
     }
     setBoard([...minesweeper.board]);
-    examineStatus()
+    examineStatus();
   };
 
   return (
