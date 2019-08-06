@@ -34,7 +34,7 @@ export default class Minesweeper {
         sq.mine = true;
         // add this mine to the list of mines
         this.mines.push(sq);
-        this.getNeighbors(sq.index).forEach(neighbor => neighbor.count += 1)
+        this.getNeighbors(sq.index).forEach(neighbor => (neighbor.count += 1));
         mineCount -= 1;
       }
     }
@@ -53,25 +53,12 @@ export default class Minesweeper {
             return;
           }
 
-          const { x, y } = this.indexToCoords(sq.index)
           sq.revealed = true;
 
-          // examine neighbors
-          const neighbors = [];
-          // west
-          if (x - 1 >= 0) neighbors.push(y * this.size + (x - 1));
-          // east
-          if (x + 1 < this.size) neighbors.push(y * this.size + (x + 1));
-          // north
-          if (y - 1 >= 0) neighbors.push((y - 1) * this.size + x);
-          // south
-          if (y + 1 < this.size) neighbors.push((y + 1) * this.size + x);
-
-          neighbors.forEach(j => {
-            const neighbor = this.board[j];
+          this.getNeighbors(sq.index, true).forEach(neighbor => {
             // if neighbor has a zero count, continue flood
             if (!neighbor.count && !neighbor.mine) {
-              flood(j);
+              flood(neighbor.index);
             }
             // if neighbor is not a mine, reveal it
             if (!neighbor.mine && !neighbor.flagged) {
@@ -89,32 +76,31 @@ export default class Minesweeper {
   }
 
   getNeighbors(i, cardinalOnly = false) {
-    const { x, y } = this.indexToCoords(i)
+    const { x, y } = this.indexToCoords(i);
+    let toVisit = cardinalOnly
+      ? [[-1, 0], [0, -1], [0, 1], [1, 0]]
+      : [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]];
     const neighbors = [];
-    for (let offsetX = -1; offsetX <= 1; offsetX++) {
-      const xx = x - offsetX;
-      // ensure potential column is within the grid. ie it is
-      // not column -1 or something
-      if (xx >= 0 && xx <= this.size - 1) {
-        for (let offsetY = -1; offsetY <= 1; offsetY++) {
-          const yy = y - offsetY;
-          // ensure potential row is within the grid. ie it is
-          // not a row that is past the end of the grid
-          if (yy >= 0 && yy <= this.size - 1) {
-            const index = xx + yy * this.size;
-            neighbors.push(this.board[index])
-          }
-        }
+    toVisit.forEach(([xOffset, yOffset]) => {
+      const xx = x - xOffset;
+      const yy = y - yOffset;
+      if (xx >= 0 && xx <= this.size - 1 && yy >= 0 && yy <= this.size - 1) {
+        const index = this.coordsToIndex(xx, yy);
+        neighbors.push(this.board[index]);
       }
-    }
-    return neighbors
+    });
+    return neighbors;
   }
 
-  indexToCoords(i){
+  indexToCoords(i) {
     return {
-        x: i % this.size,
-        y: Math.floor(i / this.size)
-    }
+      x: i % this.size,
+      y: Math.floor(i / this.size)
+    };
+  }
+
+  coordsToIndex(x, y) {
+    return x + y * this.size;
   }
 
   flagSquare(i) {
