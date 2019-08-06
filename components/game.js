@@ -12,7 +12,8 @@ export default class Game extends React.Component {
     // TODO - is this an acceptable way to hang on to non-reactive state?
     this.minesweeper = new Minesweeper(this.props.boardSize);
     this.state = {
-      board: this.minesweeper.board
+      board: this.minesweeper.board,
+      exploded: null,
     };
   }
 
@@ -23,6 +24,7 @@ export default class Game extends React.Component {
           <Square
             key={sq.index}
             disabled={sq.revealed}
+            exploded={this.state.exploded && sq.index === this.state.exploded}
             onClick={e => this.handleClick(e, sq.index)}
             onContextMenu={e => this.handleClick(e, sq.index)}
           >
@@ -54,6 +56,7 @@ export default class Game extends React.Component {
     if (result === WIN) {
       this.props.onWin();
     } else if (result === LOSS) {
+      this.state.exploded = this.minesweeper.failedAt
       this.props.onLoss();
     }
   }

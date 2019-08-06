@@ -1,12 +1,12 @@
 import { createComponent } from 'cf-style-container';
 
 const Square = createComponent(
-  ({ disabled }) => ({
+  ({ disabled, exploded }) => ({
     width: 40,
     height: 40,
     padding: 10,
     cursor: disabled ? 'initial' : 'pointer',
-    backgroundColor: disabled ? '#CCC' : '#FFF',
+    backgroundColor: exploded ? "red" : disabled ? '#CCC' : '#FFF',
     border: `1px solid black`,
     lineHeight: 1,
     textAlign: 'center',

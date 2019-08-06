@@ -70,6 +70,9 @@ export default class Minesweeper {
       } else {
         square.revealed = true;
       }
+      // NOTE - useful for figuring out which square
+      // exploded in failure scenario
+      this.lastRevealed = i
     }
 
     return this.evaluateGame();
@@ -77,6 +80,8 @@ export default class Minesweeper {
 
   getNeighbors(i, cardinalOnly = false) {
     const { x, y } = this.indexToCoords(i);
+    // TODO - maybe procedurally generate this list and filter
+    // down to cardinal only (if sum of offsets is either 1 or -1)
     let toVisit = cardinalOnly
       ? [[-1, 0], [0, -1], [0, 1], [1, 0]]
       : [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]];
@@ -119,16 +124,17 @@ export default class Minesweeper {
     if (this.mines.some(m => m.revealed)) {
       // if any mines are revealed the game is lost
       // TODO - focus the recently revealed mine?
-      this.endGame(LOSS);
+      this.status = LOSS;
+      this.failedAt = this.lastRevealed
+      this.board.forEach(sq => (sq.revealed = true));
     } else if (this.board.every(m => m.mine || m.revealed)) {
       // if all non-mine squares are revealed, win!
-      this.endGame(WIN);
+      this.status = WIN;
+      this.board.forEach(sq => (sq.revealed = true));
     }
     return this.status;
   }
 
   endGame(status) {
-    this.status = status;
-    this.board.forEach(sq => (sq.revealed = true));
   }
 }
