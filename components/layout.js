@@ -11,8 +11,8 @@ const Center = createComponent(({ theme }) => ({
 export default ({ children, title = 'Minesweeper' }) => (
   <StyleProvider>
     <Center>
-        <h1>{title}</h1>
-        {children}
+      <h1>{title}</h1>
+      {children}
     </Center>
   </StyleProvider>
 );

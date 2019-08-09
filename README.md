@@ -22,6 +22,8 @@ The rules are pretty simple (try to play with the [demo](https://sweeper.now.sh/
 
 ## TODO
 
+* figure out where to use presentational vs container
+* use fela themeprovider somehow?
 * design/layout
     * new game control
     * board size control
