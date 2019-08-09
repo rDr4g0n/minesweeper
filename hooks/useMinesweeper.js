@@ -1,29 +1,28 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Minesweeper, { WIN, LOSS } from '../components/Minesweeper';
 
 const useMinesweeper = () => {
-  const [minesweeper, setMinesweeper] = useState(new Minesweeper(10));
+  const minesweeper = useRef(new Minesweeper(10));
   const [board, setBoard] = useState([]);
   const [mineCount, setMineCount] = useState(0);
   const [explodedAt, setExplodedAt] = useState(null);
 
   const newGame = boardSize => {
-    const m = new Minesweeper(boardSize);
-    setMinesweeper(m);
-    setBoard([...m.board]);
-    setMineCount(m.mines.length);
+    minesweeper.current = new Minesweeper(boardSize);
+    setBoard([...minesweeper.current.board]);
+    setMineCount(minesweeper.current.mines.length);
     setExplodedAt(null);
   };
 
   const flagSquare = i => {
-    minesweeper.flagSquare(i);
-    setBoard([...minesweeper.board]);
+    minesweeper.current.flagSquare(i);
+    setBoard([...minesweeper.current.board]);
   };
   const revealSquare = i => {
     let result;
-    result = minesweeper.revealSquare(i);
-    setBoard([...minesweeper.board]);
-    setExplodedAt(minesweeper.failedAt);
+    result = minesweeper.current.revealSquare(i);
+    setBoard([...minesweeper.current.board]);
+    setExplodedAt(minesweeper.current.failedAt);
     return result;
   };
 

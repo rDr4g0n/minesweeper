@@ -1,20 +1,18 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Layout from '../components/layout';
 import GameControls from '../components/gamecontrols';
 import GameStatus from '../components/gamestatus';
 import GameBoard from '../components/gameboard';
 import useMinesweeper, { WIN, LOSS } from "../hooks/useMinesweeper"
 
-// TODO - fix this, useState
-let startTime = 0;
-let setStartTime = val => (startTime = val);
-
 const Index = () => {
   const [boardSize, setBoardSize] = useState(10);
   const [message, setMessage] = useState('Loading');
   const [isCheater, setIsCheater] = useState(false);
   const [duration, setDuration] = useState(0);
-  // const [startTime, setStartTime] = useState(0);
+  const [startTime, setStartTime] = useState(0);
+
+  const durationTick = useRef();
 
   const {
     board,
@@ -31,13 +29,25 @@ const Index = () => {
     setStartTime(Date.now());
   }, []);
 
-  useEffect(() => {
-    const intervalId = setInterval(() => {
+  const updateDuration = () => {
       // if no start time is set, then no game is in progress
       if (startTime) {
         setDuration(Date.now() - startTime);
       }
-    }, 500);
+  }
+
+  // ensure that setInterval callback is always looking
+  // at the latest instance of updateDuration
+  useEffect(() => {
+    durationTick.current = updateDuration
+  });
+
+  // constantly update game duration
+  useEffect(() => {
+    console.log("setting interval")
+    const intervalId = setInterval(() => {
+        durationTick.current()
+    }, 100);
     return () => clearInterval(intervalId);
   }, []);
 
@@ -45,6 +55,7 @@ const Index = () => {
     newGame(boardSize);
     setMessage("Let's do it" + Math.random());
     setStartTime(Date.now());
+    setDuration(0);
   };
 
   const handleToggleCheater = () => {
