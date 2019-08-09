@@ -3,28 +3,34 @@ import Layout from '../components/layout';
 import GameControls from '../components/gamecontrols';
 import GameStatus from '../components/gamestatus';
 import GameBoard from '../components/gameboard';
-
-import Minesweeper, { WIN, LOSS } from '../components/Minesweeper';
+import useMinesweeper, { WIN, LOSS } from "../hooks/useMinesweeper"
 
 // TODO - fix this, useState
-let startTime = 0
-let setStartTime = val => startTime = val
+let startTime = 0;
+let setStartTime = val => (startTime = val);
 
 const Index = () => {
   const [boardSize, setBoardSize] = useState(10);
-  const [minesweeper, setMinesweeper] = useState(new Minesweeper(boardSize));
-  const [board, setBoard] = useState([]);
-  const [mineCount, setMineCount] = useState(0);
   const [message, setMessage] = useState('Loading');
   const [isCheater, setIsCheater] = useState(false);
-  const [explodedAt, setExplodedAt] = useState(null);
   const [duration, setDuration] = useState(0);
   // const [startTime, setStartTime] = useState(0);
 
-  // NOTE - this seems to be the right way to do something on mount
+  const {
+    board,
+    mineCount,
+    explodedAt,
+    flagSquare,
+    revealSquare,
+    newGame
+  } = useMinesweeper();
+
   useEffect(() => {
-    newGame();
+    newGame(boardSize);
+    setMessage("Let's do it" + Math.random());
+    setStartTime(Date.now());
   }, []);
+
   useEffect(() => {
     const intervalId = setInterval(() => {
       // if no start time is set, then no game is in progress
@@ -35,32 +41,12 @@ const Index = () => {
     return () => clearInterval(intervalId);
   }, []);
 
-  const newGame = () => {
-    const m = new Minesweeper(boardSize);
-    setMinesweeper(m);
-    setBoard([...m.board]);
-    setMineCount(m.mines.length);
+  const handleNewGameClick = () => {
+    newGame(boardSize);
     setMessage("Let's do it" + Math.random());
-    setExplodedAt(null);
     setStartTime(Date.now());
   };
 
-  const handleNewGameClick = () => newGame();
-  const handleWin = () => {
-    setDuration(Date.now() - startTime);
-    setStartTime(0);
-    setMessage("You've done it.");
-  };
-  const handleLoss = () => {
-    setDuration(Date.now() - startTime);
-    setStartTime(0);
-    setExplodedAt(minesweeper.failedAt);
-    setMessage(
-      `You've failed.${
-        isCheater ? " Despite cheating, you've still failed." : ''
-      }`
-    );
-  };
   const handleToggleCheater = () => {
     if (!isCheater) {
       setMessage('CHEATER!');
@@ -69,17 +55,23 @@ const Index = () => {
   };
 
   const handleFlag = i => {
-    minesweeper.flagSquare(i);
-    setBoard([...minesweeper.board]);
+    flagSquare(i);
   };
+
   const handleReveal = i => {
-    let result;
-    result = minesweeper.revealSquare(i);
-    setBoard([...minesweeper.board]);
-    if (result === WIN) {
-      handleWin();
-    } else if (result === LOSS) {
-      handleLoss();
+    const status = revealSquare(i);
+    if (status) {
+      setDuration(Date.now() - startTime);
+      setStartTime(0);
+      if (status === WIN) {
+        setMessage("You've done it.");
+      } else if (status === LOSS) {
+        setMessage(
+          `You've failed.${
+            isCheater ? " Despite cheating, you've still failed." : ''
+          }`
+        );
+      }
     }
   };
 
@@ -91,11 +83,7 @@ const Index = () => {
           {isCheater ? 'I dont wanna cheat no more' : 'Lemme peek at the board'}
         </button>
       </GameControls>
-      <GameStatus
-        count={mineCount}
-        duration={duration}
-        message={message}
-      />
+      <GameStatus count={mineCount} duration={duration} message={message} />
       <GameBoard
         board={board}
         boardSize={boardSize}

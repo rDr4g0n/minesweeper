@@ -22,18 +22,9 @@ The rules are pretty simple (try to play with the [demo](https://sweeper.now.sh/
 
 ## TODO
 
-* figure out where to use presentational vs container
-* use fela themeprovider somehow?
-* design/layout
-    * new game control
-    * board size control
-    * game timer, mine count
-    * win scenario
-    * lose scenario
-* make Square handle picking the right visual representation based on its state
-* transitions when square state changes
+* style everything
+    * nice win/fail visuals
+    * use fela themeprovider somehow?
+* nice transition when square state changes
+* difficulty control (boardsize + mine count)?
 * tests
-* minecraft theme (ha!)
-    * creepers for mines?
-    * board is made of dirt blocks/grass
-    * underneath is stone blocks

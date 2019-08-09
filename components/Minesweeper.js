@@ -1,10 +1,6 @@
-// NOTE - i have no idea where totaolly non-react related code should live
-
 const WIN = 'win';
 const LOSS = 'loss';
-
 const randoItem = arr => arr[Math.floor(Math.random() * arr.length)];
-
 export { WIN, LOSS };
 
 export default class Minesweeper {
@@ -72,7 +68,7 @@ export default class Minesweeper {
       }
       // NOTE - useful for figuring out which square
       // exploded in failure scenario
-      this.lastRevealed = i
+      this.lastRevealed = i;
     }
 
     return this.evaluateGame();
@@ -123,9 +119,8 @@ export default class Minesweeper {
   evaluateGame() {
     if (this.mines.some(m => m.revealed)) {
       // if any mines are revealed the game is lost
-      // TODO - focus the recently revealed mine?
       this.status = LOSS;
-      this.failedAt = this.lastRevealed
+      this.failedAt = this.lastRevealed;
       this.board.forEach(sq => (sq.revealed = true));
     } else if (this.board.every(m => m.mine || m.revealed)) {
       // if all non-mine squares are revealed, win!
@@ -133,8 +128,5 @@ export default class Minesweeper {
       this.board.forEach(sq => (sq.revealed = true));
     }
     return this.status;
-  }
-
-  endGame(status) {
   }
 }
