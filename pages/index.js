@@ -27,7 +27,7 @@ const Index = () => {
 
   useEffect(() => {
     newGame(boardSize);
-    setMessage("Let's do it" + Math.random());
+    setMessage("Let's do it");
     setStartTime(Date.now());
   }, []);
 
