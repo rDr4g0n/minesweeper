@@ -26,8 +26,8 @@ const Square = ({
   return (
     <div {...props}>
       {!revealed && flagged && <Flag />}
-      {(peek || revealed) && mine && <Mine />}
-      {(peek || revealed) && !mine && !!count && count}
+      {(peek || revealed) && mine && !flagged && <Mine />}
+      {(revealed) && !mine && !!count && count}
     </div>
   );
 };
