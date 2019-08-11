@@ -26,7 +26,7 @@ const Index = () => {
 
   const setupNewGame = () => {
     newGame(boardSize);
-    setMessage("GO FOR IT!");
+    setMessage('GO FOR IT!');
     setStartTime(Date.now());
     setDuration(0);
   };
@@ -76,9 +76,7 @@ const Index = () => {
         setMessage("You've done it.");
       } else if (status === LOSS) {
         setMessage(
-          `Ouch. ${
-            isCheater ? " Despite cheating, you've still failed." : ''
-          }`
+          `Ouch. ${isCheater ? " Despite cheating, you've still failed." : ''}`
         );
       }
     }
@@ -93,7 +91,11 @@ const Index = () => {
       </GameControls>
       <GameStatus count={mineCount} duration={duration}>
         {message}
-        {explodedAt && <Button inline onClick={setupNewGame}>Try Again?</Button>}
+        {explodedAt && (
+          <Button inline onClick={setupNewGame}>
+            Try Again?
+          </Button>
+        )}
       </GameStatus>
       <GameBoard
         board={board}

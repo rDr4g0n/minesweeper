@@ -36,5 +36,5 @@ const useMinesweeper = () => {
   };
 };
 
-export { WIN, LOSS }
-export default useMinesweeper
+export { WIN, LOSS };
+export default useMinesweeper;

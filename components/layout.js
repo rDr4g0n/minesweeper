@@ -8,15 +8,15 @@ const Center = createComponent(({ boardSize, theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  width: `${(boardSize * 40) + 2}px`
+  width: `${boardSize * 40 + 2}px`
 }));
 
 const titleStyle = {
-  textTransform: "uppercase",
-  margin: "0 0 -60px 0",
-  fontSize: "90px",
-  color: "rgba(255, 255, 255, 0.1)"
-}
+  textTransform: 'uppercase',
+  margin: '0 0 -60px 0',
+  fontSize: '90px',
+  color: 'rgba(255, 255, 255, 0.1)'
+};
 
 export default ({ children, title = 'Minesweeper', boardSize }) => (
   <StyleProvider>
