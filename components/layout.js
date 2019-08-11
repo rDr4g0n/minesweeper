@@ -15,7 +15,7 @@ const titleStyle = {
   textTransform: "uppercase",
   margin: "0 0 -60px 0",
   fontSize: "90px",
-  color: "#444",
+  color: "rgba(255, 255, 255, 0.1)"
 }
 
 export default ({ children, title = 'Minesweeper', boardSize }) => (

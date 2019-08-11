@@ -8,7 +8,7 @@ const styles = ({ revealed, exploded }) => ({
   padding: 10,
   cursor: revealed ? 'initial' : 'pointer',
   backgroundColor: exploded ? 'rgba(255, 20, 147, 0.3)' : revealed ? '#222' : '#555',
-  color: exploded ? 'black' : 'limegreen',
+  color: exploded ? 'black' : '#666',
   border: `1px solid #000`,
   lineHeight: 1,
   textAlign: 'center',
@@ -26,7 +26,7 @@ const Square = ({
 }) => {
   return (
     <div {...props}>
-      {!revealed && flagged && <Flag />}
+      {flagged && <Flag />}
       {(peek || revealed) && mine && !flagged && <Mine />}
       {(revealed) && !mine && !!count && count}
     </div>
