@@ -7,8 +7,9 @@ const styles = ({ revealed, exploded }) => ({
   height: 40,
   padding: 10,
   cursor: revealed ? 'initial' : 'pointer',
-  backgroundColor: exploded ? 'red' : revealed ? '#CCC' : '#FFF',
-  border: `1px solid black`,
+  backgroundColor: exploded ? 'rgba(255, 20, 147, 0.3)' : revealed ? '#222' : '#555',
+  color: exploded ? 'black' : 'limegreen',
+  border: `1px solid #000`,
   lineHeight: 1,
   textAlign: 'center',
   fontSize: 18

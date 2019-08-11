@@ -21,10 +21,7 @@ The rules are pretty simple (try to play with the [demo](https://sweeper.now.sh/
 
 
 ## TODO
-
-* style everything
-    * nice win/fail visuals
-    * use fela themeprovider somehow?
-* nice transition when square state changes
-* difficulty control (boardsize + mine count)?
-* tests
+* flagged mine squares are empty when game is win/loss
+* tile hover transition
+* tile reveal transition
+* bomb asplode transition

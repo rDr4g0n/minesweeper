@@ -18,7 +18,7 @@ export default class MyDocument extends Document {
             dangerouslySetInnerHTML={{
               __html: `
                 *{ box-sizing: border-box; }
-                body { margin: 0; }
+                body { margin: 0; color: white; background-color: black; }
                 html { font-family: 'Open Sans', sans-serif; }
                `
             }}

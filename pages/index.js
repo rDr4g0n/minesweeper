@@ -26,7 +26,7 @@ const Index = () => {
 
   const setupNewGame = () => {
     newGame(boardSize);
-    setMessage("Let's do it");
+    setMessage("GO FOR IT!");
     setStartTime(Date.now());
     setDuration(0);
   };
@@ -58,7 +58,7 @@ const Index = () => {
 
   const handleToggleCheater = () => {
     if (!isCheater) {
-      setMessage('CHEATER!');
+      setMessage('CHEATER! ');
     }
     setIsCheater(!isCheater);
   };
@@ -76,7 +76,7 @@ const Index = () => {
         setMessage("You've done it.");
       } else if (status === LOSS) {
         setMessage(
-          `You've failed.${
+          `Ouch. ${
             isCheater ? " Despite cheating, you've still failed." : ''
           }`
         );
@@ -85,14 +85,16 @@ const Index = () => {
   };
 
   return (
-    <Layout title={`Minesweeper`} boardSize={boardSize}>
+    <Layout boardSize={boardSize}>
       <GameControls>
-        <Button onClick={setupNewGame}>New Game</Button>
         <Button text onClick={handleToggleCheater}>
           {isCheater ? '😇' : '😈'}
         </Button>
       </GameControls>
-      <GameStatus count={mineCount} duration={duration} message={message} />
+      <GameStatus count={mineCount} duration={duration}>
+        {message}
+        {explodedAt && <Button inline onClick={setupNewGame}>Try Again?</Button>}
+      </GameStatus>
       <GameBoard
         board={board}
         boardSize={boardSize}

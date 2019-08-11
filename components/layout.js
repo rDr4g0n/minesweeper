@@ -11,14 +11,17 @@ const Center = createComponent(({ boardSize, theme }) => ({
   width: `${(boardSize * 40) + 2}px`
 }));
 
-const theme = {
-    squareSize: 40
+const titleStyle = {
+  textTransform: "uppercase",
+  margin: "0 0 -60px 0",
+  fontSize: "90px",
+  color: "#444",
 }
 
 export default ({ children, title = 'Minesweeper', boardSize }) => (
   <StyleProvider>
     <Center boardSize={boardSize}>
-      <h1>{title}</h1>
+      <h1 style={titleStyle}>{title}</h1>
       {children}
     </Center>
   </StyleProvider>

@@ -1,30 +1,28 @@
 import { createComponent } from 'cf-style-container';
 import moment from 'moment';
 
-const MineCount = createComponent(props => ({
+const Message = createComponent(props => ({
+  fontSize: "1.4em",
   fontWeight: "bold",
-}));
-const GameDuration = createComponent(props => ({
-  color: "#CCC"
+  textShadow: "0 0 10px black",
 }));
 
 const styles = props => ({
   display: 'flex',
   justifyContent: 'space-between',
+  alignItems: 'center',
   width: "100%",
-  backgroundColor: "#333",
   padding: "2px 6px",
-  color: "white",
 });
 
-const GameStatus = ({ count, duration, message, className }) => {
+const GameStatus = ({ count, duration, className, children }) => {
   const toFriendlyDuration = ms =>
     moment.utc(moment.duration(ms).as('ms')).format('HH:mm:ss');
   return (
     <div className={className}>
-      <MineCount>{count} Mines</MineCount>
-      <div>{message}</div>
-      <GameDuration>{toFriendlyDuration(duration)}</GameDuration>
+      <div>{count} Mines</div>
+      <Message>{children}</Message>
+      <div>{toFriendlyDuration(duration)}</div>
     </div>
   );
 };
