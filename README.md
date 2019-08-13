@@ -25,6 +25,5 @@ The rules are pretty simple (try to play with the [demo](https://sweeper.now.sh/
 * tile reveal transition
 * bomb asplode transition
 * bigger number = brighter color?
-
 * use fela to properly share style/theme vars
 * figure out the react way to do hover, css transitions, etc
